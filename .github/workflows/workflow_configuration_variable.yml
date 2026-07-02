@@ -1,6 +1,7 @@
 name: configuration-variablle
 
 on:
+# workflow_dispatch is for manual trigger
   workflow_dispatch:
 env:
   cloud: amazon-cloud
