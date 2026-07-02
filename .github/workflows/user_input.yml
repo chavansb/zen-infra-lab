@@ -1,23 +1,28 @@
 name: user-input
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       number1:
         description: "First Number"
-        default: "0"
         required: true
+        default: "0"
+
       number2:
         description: "Second Number"
-        default: "0" 
         required: true
+        default: "0"
+
 jobs:
   add_numbers:
     runs-on: ubuntu-latest
+
     steps:
       - name: Add numbers
         id: sum
-        run: echo "::set-output name=sum::$((${{inputs.number1}} + ${{inputs.number2}}))
+        run: |
+          echo "sum=$((${{ inputs.number1 }} + ${{ inputs.number2 }}))" >> "$GITHUB_OUTPUT"
+
       - name: Display sum
-        run: echo "The sum of ${{inputs.number1}} and ${{inputs.number2}} is ${{steps.sum.outputs.sum}}
-        
+        run: |
+          echo "The sum of ${{ inputs.number1 }} and ${{ inputs.number2 }} is ${{ steps.sum.outputs.sum }}"
