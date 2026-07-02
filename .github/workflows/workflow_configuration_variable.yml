@@ -1,0 +1,17 @@
+name: configuration-variablle
+
+on:
+  workflow_dispatch:
+env:
+  cloud: amazon-cloud
+
+jobs:
+  greeting_job:
+    runs-on: ubuntu-latest
+    env:
+      Greeting: Hello dear
+    steps:
+      - name: " Say hello to Vishal"
+        run: echo "$Greeting $First_name today is monday and you are using $cloud with project and id ${{PROJECT_ID}}"
+        env:
+          First_name: Vishal
