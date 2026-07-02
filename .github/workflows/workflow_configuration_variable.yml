@@ -12,6 +12,6 @@ jobs:
       Greeting: Hello dear
     steps:
       - name: " Say hello to Vishal"
-        run: echo "$Greeting $First_name today is monday and you are using $cloud with project and id ${{PROJECT_ID}}"
+        run: echo "$Greeting $First_name today is monday and you are using $cloud with project and id ${{vars.PROJECT_ID}}"
         env:
           First_name: Vishal
