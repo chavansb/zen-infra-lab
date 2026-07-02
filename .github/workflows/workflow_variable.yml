@@ -1,0 +1,16 @@
+name: variable-ci
+
+on:
+  workflow_dispatch
+env:
+  cloud: google-cloud
+jobs:
+  greeting_jobs:
+    runs-on: ubuntu-latest
+    env:
+      Greeting: Hello
+    steps:
+      - name: " Say Hello Mona it's Monday"
+        run: echo "$Greeting $First_name its Monday and you are using $cloud"
+        env:
+          First_name: Vishal
