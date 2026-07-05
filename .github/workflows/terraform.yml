@@ -409,7 +409,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init -backend-config=backend.tfvars
+        run: terraform init -backend-config=backend.tfvars -reconfigure
 
       - name: Terraform Validate
         id: validate
@@ -473,7 +473,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
-        run: terraform init -backend-config=backend.tfvars
+        run: terraform init -backend-config=backend.tfvars -reconfigure
 
       - name: Download plan file
         uses: actions/download-artifact@v4
@@ -546,7 +546,7 @@ jobs:
           esac
 
       - name: Terraform Init
-        run: terraform init -backend-config=backend.tfvars
+        run: terraform init -backend-config=backend.tfvars -reconfigure
 
       - name: Terraform Destroy
         run: |
