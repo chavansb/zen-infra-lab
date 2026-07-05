@@ -17,7 +17,7 @@ module "vpc" {
 module "eks" {
   source = "../../modules/eks"
 
-  project            = "zen-pharma"
+  project            = "pharma"
   env                = "dev"
   cluster_version    = "1.31"
   subnet_ids         = module.vpc.private_eks_subnet_ids
