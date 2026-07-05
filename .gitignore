@@ -1,0 +1,21 @@
+# Terraform directories - never commit downloaded providers
+**/.terraform/*
+
+# State files - stored in S3, never commit locally
+*.tfstate
+*.tfstate.*
+
+# Sensitive variable files
+*.tfvars
+!example.tfvars
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Keep lock file - this should be committed
+!.terraform.lock.hcl
+
+# OS files
+.DS_Store
+Thumbs.db
