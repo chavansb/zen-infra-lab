@@ -61,12 +61,28 @@
 
 #########################################################
 # GITHUB ACTIONS OIDC PROVIDER
+#
+# This provider is account-wide — only ONE can exist per
+# AWS account regardless of how many environments you have.
+#
+# How it works per environment:
+#   create_github_oidc_provider = true  → dev CREATES it
+#   create_github_oidc_provider = false → qa/prod READ it
+#
+# This way:
+#   - destroy dev → recreate dev → provider gets recreated ✅
+#   - qa/prod always just read whatever exists             ✅
+#   - no EntityAlreadyExists 409 error                     ✅
 #########################################################
 
+# CREATES the provider — only runs when create_github_oidc_provider = true (dev only)
 # This resource registers GitHub as a trusted Identity Provider in AWS.
 # AWS will trust JWT tokens issued by GitHub Actions.
-
 resource "aws_iam_openid_connect_provider" "github_actions" {
+  # count = 1 → create it (dev)
+  # count = 0 → skip it   (qa, prod)
+  count = var.create_github_oidc_provider ? 1 : 0
+
   # GitHub's official OIDC endpoint.
   # Every GitHub Actions workflow gets its identity token from here.
   url = "https://token.actions.githubusercontent.com"
@@ -86,6 +102,23 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
   }
 }
 
+# READS the existing provider — only runs when create_github_oidc_provider = false (qa, prod)
+# Provider was already created by dev — just look it up
+data "aws_iam_openid_connect_provider" "github_actions" {
+  count = var.create_github_oidc_provider ? 0 : 1
+  url   = "https://token.actions.githubusercontent.com"
+}
+
+# Local value — gives us the ARN regardless of whether
+# we created the provider (dev) or just read it (qa/prod)
+locals {
+  github_oidc_provider_arn = var.create_github_oidc_provider ? (
+    aws_iam_openid_connect_provider.github_actions[0].arn
+  ) : (
+    data.aws_iam_openid_connect_provider.github_actions[0].arn
+  )
+}
+
 #########################################################
 # IAM TRUST POLICY
 #########################################################
@@ -95,8 +128,9 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
     effect  = "Allow"
 
     principals {
-      type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
+      type = "Federated"
+      # Uses local value — works correctly for both create (dev) and read (qa/prod) cases
+      identifiers = [local.github_oidc_provider_arn]
     }
 
     condition {
