@@ -78,6 +78,7 @@ module "iam" {
   # data.aws_caller_identity.current fetches your real account ID
   # automatically — no hardcoding needed
   aws_account_id    = data.aws_caller_identity.current.account_id
+  create_github_oidc_provider = true
 }
 
 module "secrets_manager" {
