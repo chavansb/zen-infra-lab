@@ -1,21 +1,24 @@
-# Terraform directories - never commit downloaded providers
+cat > .gitignore << 'EOF'
+# Terraform directories
 **/.terraform/*
 
-# State files - stored in S3, never commit locally
+# State files
 *.tfstate
 *.tfstate.*
 
-# Sensitive variable files
+# Sensitive variable files - these contain secrets, never commit
 *.tfvars
 !example.tfvars
+!backend.tfvars
 
 # Crash logs
 crash.log
 crash.*.log
 
-# Keep lock file - this should be committed
-!.terraform.lock.hcl
-
 # OS files
 .DS_Store
 Thumbs.db
+
+# Keep lock file
+!.terraform.lock.hcl
+EOF
