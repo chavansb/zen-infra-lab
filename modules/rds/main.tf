@@ -45,9 +45,10 @@ resource "aws_db_instance" "main" {
   vpc_security_group_ids  = [aws_security_group.rds.id]
   multi_az                = var.env == "prod" ? true : false
   skip_final_snapshot     = var.env == "prod" ? false : true
+  final_snapshot_identifier = var.env == "prod" ? "${var.project}-${var.env}-postgres-final" : null
   backup_retention_period = var.env == "prod" ? 7 : 0
   storage_encrypted       = true
-  deletion_protection     = var.env == "prod" ? true : false
+  deletion_protection     = var.env == "prod" ? false : true
   publicly_accessible     = false
   tags = {
     Name    = "${var.project}-${var.env}-postgres"
